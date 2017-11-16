@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 2.8)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
-project(container4c C)
+PROJECT(container4c C)
 
-add_subdirectory(source)
-add_subdirectory(test)
+ADD_SUBDIRECTORY(source)
+ADD_SUBDIRECTORY(test)
