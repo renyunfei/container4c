@@ -31,13 +31,12 @@
 
 #include <stdlib.h>
 #include "list.h"
-#include "zmalloc.h"
 
 list_t *list_create(void)
 {
     list_t *list;
 
-    if ((list = zmalloc(sizeof(*list))) == NULL)
+    if ((list = malloc(sizeof(*list))) == NULL)
         return NULL;
     list->head = list->tail = NULL;
     list->len = 0;
@@ -57,17 +56,17 @@ void list_free(list_t *list)
     while(len--) {
         next = current->next;
         if (list->free) list->free(current->value);
-        zfree(current);
+        free(current);
         current = next;
     }
-    zfree(list);
+    free(list);
 }
 
 list_t *list_add_head(list_t *list, void *value)
 {
     list_node_t *node;
 
-    if ((node = zmalloc(sizeof(*node))) == NULL)
+    if ((node = malloc(sizeof(*node))) == NULL)
         return NULL;
     node->value = value;
     if (list->len == 0) {
@@ -87,7 +86,7 @@ list_t *list_add(list_t *list, void *value)
 {
     list_node_t *node;
 
-    if ((node = zmalloc(sizeof(*node))) == NULL)
+    if ((node = malloc(sizeof(*node))) == NULL)
         return NULL;
     node->value = value;
     if (list->len == 0) {
@@ -107,7 +106,7 @@ list_t *list_insert(list_t *list, list_node_t *old_node, void *value, int after)
 {
     list_node_t *node;
 
-    if ((node = zmalloc(sizeof(*node))) == NULL)
+    if ((node = malloc(sizeof(*node))) == NULL)
         return NULL;
     node->value = value;
     if (after) {
@@ -144,7 +143,7 @@ void list_remove(list_t *list, list_node_t *node)
     else
         list->tail = node->prev;
     if (list->free) list->free(node->value);
-    zfree(node);
+    free(node);
     list->len--;
 }
 
@@ -152,7 +151,7 @@ list_iter_t *list_iterator(list_t *list, int direction)
 {
     list_iter_t *iter;
 
-    if ((iter = zmalloc(sizeof(*iter))) == NULL) return NULL;
+    if ((iter = malloc(sizeof(*iter))) == NULL) return NULL;
     if (direction == _START_HEAD)
         iter->next = list->head;
     else
@@ -163,7 +162,7 @@ list_iter_t *list_iterator(list_t *list, int direction)
 
 void list_free_iterator(list_iter_t *iter) 
 {
-    zfree(iter);
+    free(iter);
 }
 
 void list_rewind(list_t *list, list_iter_t *li) 
@@ -193,7 +192,7 @@ list_node_t *list_next(list_iter_t *iter)
 
 list_t *list_clone(list_t *orig)
 {
-    list *copy;
+    list_t *copy;
     list_iter_t *iter;
     list_node_t *node;
 
